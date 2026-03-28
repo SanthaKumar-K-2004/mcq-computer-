@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CompuQuiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --secondary: #06b6d4;
+  --success: #10b981;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --text: #1e293b;
+  --text-secondary: #64748b;
+  --border: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: #334155;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* App Bar */
+.appbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.appbar-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+.appbar-title span { color: var(--primary); }
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: none;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.icon-btn:hover { background: var(--border); }
+
+/* Screens */
+.screen { display: none; min-height: calc(100vh - 73px); }
+.screen.active { display: block; }
+
+/* Container */
+.container { max-width: 600px; margin: 0 auto; padding: 24px 20px; }
+
+/* Hero Section */
+.hero {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.hero-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin: 0 auto 20px;
+  box-shadow: var(--shadow-lg);
+}
+.hero h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.hero p {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+/* Form Elements */
+.form-group { margin-bottom: 20px; }
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.form-input, .form-select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.form-input:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: var(--surface);
+}
+.form-input::placeholder { color: var(--text-secondary); }
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='%2364748b'%3E%3Cpath d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 44px;
+}
+.error-msg {
+  color: var(--error);
+  font-size: 13px;
+  margin-top: 6px;
+  display: none;
+}
+.error-msg.show { display: block; }
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 24px 0;
+}
+.stat-item {
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 16px 8px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary);
+  display: block;
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Buttons */
+.btn {
+  width: 100%;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-secondary {
+  background: var(--bg);
+  color: var(--text);
+  border: 2px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--primary); }
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+/* Quiz Screen */
+.quiz-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+}
+.quiz-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.quiz-counter {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.quiz-unit {
+  background: var(--primary);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.progress-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* Timer */
+.timer-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+.timer-circle {
+  position: relative;
+  width: 72px;
+  height: 72px;
+}
+.timer-circle svg {
+  transform: rotate(-90deg);
+  width: 72px;
+  height: 72px;
+}
+.timer-circle circle {
+  fill: none;
+  stroke-width: 5;
+}
+.timer-bg { stroke: var(--border); }
+.timer-fg {
+  stroke: var(--primary);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear, stroke 0.3s;
+}
+.timer-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* Question Card */
+.question-card {
+  background: var(--surface);
+  margin: 0 20px 20px;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+.question-text {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  color: var(--text);
+}
+
+/* Options */
+.options { display: flex; flex-direction: column; gap: 12px; }
+.option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--text);
+}
+.option:hover:not(:disabled) {
+  border-color: var(--primary);
+  background: var(--surface);
+}
+.option-letter {
+  width: 32px;
+  height: 32px;
+  background: var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.option-text { flex: 1; line-height: 1.5; }
+.option.correct {
+  background: #d1fae5;
+  border-color: var(--success);
+  color: #065f46;
+}
+.option.correct .option-letter { background: var(--success); color: white; }
+.option.wrong {
+  background: #fee2e2;
+  border-color: var(--error);
+  color: #991b1b;
+}
+.option.wrong .option-letter { background: var(--error); color: white; }
+[data-theme="dark"] .option.correct { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+[data-theme="dark"] .option.wrong { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+/* Hint Box */
+.hint-box {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 1px solid #f59e0b;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+  display: none;
+}
+.hint-box.show { display: block; }
+[data-theme="dark"] .hint-box {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(251, 191, 36, 0.2));
+}
+.hint-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #92400e;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.hint-text {
+  font-size: 14px;
+  color: #78350f;
+  line-height: 1.5;
+}
+[data-theme="dark"] .hint-title { color: #fbbf24; }
+[data-theme="dark"] .hint-text { color: #fcd34d; }
+
+/* Auto Next */
+.auto-next {
+  background: #d1fae5;
+  border: 1px solid var(--success);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #065f46;
+  font-weight: 500;
+  display: none;
+}
+.auto-next.show { display: block; }
+[data-theme="dark"] .auto-next { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+/* Next Button */
+.next-btn {
+  margin: 0 20px 20px;
+  background: linear-gradient(135deg, var(--secondary), #0891b2);
+  color: white;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  display: none;
+  width: calc(100% - 40px);
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
+}
+.next-btn.show { display: block; }
+.next-btn:hover { transform: translateY(-2px); }
+
+/* Results Screen */
+.result-hero {
+  text-align: center;
+  padding: 32px 20px;
+}
+.result-emoji {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+.result-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.result-subtitle {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+/* Score Circle */
+.score-circle {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: conic-gradient(var(--primary) 0%, var(--border) 0%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 24px auto;
+  position: relative;
+}
+.score-inner {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.score-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary);
+}
+.score-total {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Result Stats */
+.result-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.result-stat {
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 16px 8px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+.result-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  display: block;
+}
+.result-stat-value.pass { color: var(--success); }
+.result-stat-value.fail { color: var(--error); }
+.result-stat-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Unit Progress */
+.unit-progress { margin-bottom: 24px; }
+.unit-progress-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.unit-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.unit-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  min-width: 80px;
+}
+.unit-bar-wrap {
+  flex: 1;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.unit-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+.unit-percent {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary);
+  min-width: 40px;
+  text-align: right;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .container { padding: 20px 16px; }
+  .hero h1 { font-size: 24px; }
+  .card { padding: 20px; }
+  .question-card { margin: 0 16px 16px; padding: 20px; }
+  .question-text { font-size: 16px; }
+  .next-btn { width: calc(100% - 32px); margin: 0 16px 16px; }
+  .result-stats { gap: 8px; }
+  .result-stat { padding: 12px 4px; }
+  .result-stat-value { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- APP BAR -->
+<div class="appbar">
+  <div class="appbar-title">Compu<span>Quiz</span></div>
+  <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+</div>
+
+<!-- REGISTER SCREEN -->
+<div class="screen active" id="regScreen">
+  <div class="container">
+    <div class="hero">
+      <div class="hero-icon">💻</div>
+      <h1>Basic Computer MCQ</h1>
+      <p>150 questions • AI hints • 60s timer</p>
+    </div>
+    
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">Your Name</label>
+        <input type="text" class="form-input" id="rName" placeholder="Enter your name" oninput="valReg()">
+        <div class="error-msg" id="eName">Please enter your name</div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Select Unit</label>
+        <select class="form-select" id="uSel">
+          <option value="all">All Topics (150 Questions)</option>
+          <option value="0">Unit 1 — Basics & I/O</option>
+          <option value="1">Unit 2 — Memory & Storage</option>
+          <option value="2">Unit 3 — Software</option>
+          <option value="3">Unit 4 — Data & AI</option>
+          <option value="4">Unit 5 — Internet & Security</option>
+        </select>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-value">150</span>
+          <span class="stat-label">Questions</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">60s</span>
+          <span class="stat-label">Per Question</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">5</span>
+          <span class="stat-label">Units</span>
+        </div>
+      </div>
+      
+      <button class="btn btn-primary" id="startBtn" onclick="startQuiz()" disabled>
+        🚀 Start Quiz
+      </button>
+    </div>
+    
+    <div class="footer">
+      Developed by <a href="#">AlphaX Solution</a> • TNGPC Madurai
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div class="screen" id="quizScreen">
+  <div class="quiz-header">
+    <div class="quiz-info">
+      <span class="quiz-counter" id="qCtr">Question 1 of 150</span>
+      <span class="quiz-unit" id="uBadge">Unit 1</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="pFill" style="width:0%"></div>
+    </div>
+  </div>
+  
+  <div class="timer-container">
+    <div class="timer-circle">
+      <svg viewBox="0 0 72 72">
+        <circle class="timer-bg" cx="36" cy="36" r="32"/>
+        <circle class="timer-fg" id="tCirc" cx="36" cy="36" r="32" stroke-dasharray="201" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-text" id="tNum">60</div>
+    </div>
+  </div>
+  
+  <div class="question-card">
+    <div class="question-text" id="qText"></div>
+    <div class="options" id="opts"></div>
+    <div class="auto-next" id="autoNext">
+      ✅ Correct! Moving to next in <span id="aCnt">2</span>s...
+    </div>
+    <div class="hint-box" id="hBox">
+      <div class="hint-title">💡 Memory Shortcut</div>
+      <div class="hint-text" id="hText"></div>
+    </div>
+  </div>
+  
+  <button class="next-btn" id="nBtn" onclick="nextQ()">Next Question →</button>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resScreen">
+  <div class="container">
+    <div class="result-hero">
+      <div class="result-emoji" id="rEmoji">🎉</div>
+      <h2 class="result-title" id="rTitle">Quiz Complete!</h2>
+      <p class="result-subtitle" id="rSub"></p>
+    </div>
+    
+    <div class="score-circle" id="sCircle">
+      <div class="score-inner">
+        <div class="score-value" id="sNum">0</div>
+        <div class="score-total" id="sDenom">/ 150</div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="result-stats">
+        <div class="result-stat">
+          <span class="result-stat-value pass" id="rC">0</span>
+          <span class="result-stat-label">Correct</span>
+        </div>
+        <div class="result-stat">
+          <span class="result-stat-value fail" id="rW">0</span>
+          <span class="result-stat-label">Wrong</span>
+        </div>
+        <div class="result-stat">
+          <span class="result-stat-value" id="rSk">0</span>
+          <span class="result-stat-label">Skipped</span>
+        </div>
+        <div class="result-stat">
+          <span class="result-stat-value" id="rPct">0%</span>
+          <span class="result-stat-label">Score</span>
+        </div>
+      </div>
+      
+      <div class="unit-progress">
+        <div class="unit-progress-title">Unit-wise Progress</div>
+        <div id="uRows"></div>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="btn btn-primary" onclick="retryQuiz()">🔄 Retry</button>
+        <button class="btn btn-secondary" onclick="goHome()">🏠 Home</button>
+      </div>
+    </div>
+    
+    <div class="footer">
+      Developed by <a href="#">AlphaX Solution</a> • TNGPC Madurai
+    </div>
+  </div>
+</div>
+
+<script>
+const ALL_Q = [
+  // Unit 1: Basics & I/O (Questions 1-30)
+  {q:"The numbers collected from a survey before processing are called",o:["Raw data","Information","Program","Output"],a:0},
+  {q:"The meaningful result obtained after processing data in a computer is called",o:["Memory","Hardware","Information","Input"],a:2},
+  {q:"Which device is commonly used to type text into a computer?",o:["Keyboard","Monitor","Printer","Speaker"],a:0},
+  {q:"The sequence Input → Process → Output in a computer system is known as",o:["Software cycle","Processing model","Computer cycle","Data flow"],a:2},
+  {q:"The physical components of a computer that can be seen and touched are called",o:["Program","Data","Hardware","Software"],a:2},
+  {q:"Typing an email using a keyboard is considered as which operation in a computer system?",o:["Output","Storage","Processing","Input"],a:3},
+  {q:"When the result of a program appears on the monitor, it is called",o:["Input","Output","Processing","Storage"],a:1},
+  {q:"Which component of the CPU performs arithmetic calculations such as addition and subtraction?",o:["RAM","ALU","Cache","Control Unit"],a:1},
+  {q:"Which unit of the computer controls and coordinates all operations?",o:["Hard disk","Control Unit","RAM","Printer"],a:1},
+  {q:"If incorrect data is entered into a computer, the output will also be incorrect. This shows that accuracy depends on",o:["Software","Input data","Hardware","Printer"],a:1},
+  {q:"The combination of hardware and software working together is called a",o:["Computer system","Digital system","Processing unit","Information system"],a:0},
+  {q:"Which of the following is an example of information rather than raw data?",o:["Random numbers","Keyboard input","Student marks with average","45, 78, 90"],a:2},
+  {q:"A computer performs tasks based on",o:["Given instructions","Human thinking","Random choice","Screen display"],a:0},
+  {q:"The ability of a computer to perform millions of calculations in a short time shows its",o:["Accuracy","Storage","Speed","Reliability"],a:2},
+  {q:"Which component of the CPU is responsible for performing arithmetic operations?",o:["Control Unit","ALU","RAM","Cache"],a:1},
+  {q:"Modern optical mouse devices detect movement using",o:["Sound waves","Magnetic sensors","Laser or LED light","Heat sensors"],a:2},
+  {q:"A microphone converts sound into",o:["Images","Electrical signals","Text","Light signals"],a:1},
+  {q:"Which device is used to capture live images during a video call?",o:["Scanner","Plotter","Webcam","Printer"],a:2},
+  {q:"Which printer produces characters by striking pins against an ink ribbon?",o:["Inkjet printer","Thermal printer","Dot matrix printer","Laser printer"],a:2},
+  {q:"Which device is commonly used to print large engineering drawings and maps?",o:["Plotter","Speaker","Scanner","Mouse"],a:0},
+  {q:"Which input device is mainly used to control movement in computer games?",o:["Printer","Webcam","Scanner","Joystick"],a:3},
+  {q:"A flatbed scanner is mainly used to scan",o:["Paper documents","Audio files","Video signals","Programs"],a:0},
+  {q:"LED monitors use",o:["Plasma technology","Magnetic display","Liquid crystal display","Light emitting diode technology"],a:3},
+  {q:"Devices that present results from a computer to the user are called",o:["Storage devices","Output devices","Input devices","Processing units"],a:1},
+  {q:"In supermarkets, a barcode reader is used to read",o:["Password","Document","Barcode","QR image"],a:2},
+  {q:"After scanning a document, the scanner usually produces a",o:["Video file","Audio file","Digital image","Program"],a:2},
+  {q:"The arrow symbol that moves on the screen when the mouse is moved is called",o:["Menu","Pointer","Icon","Window"],a:1},
+  {q:"Which device allows a user to point directly at objects on the screen?",o:["Keyboard","Speaker","Light pen","Plotter"],a:2},
+  {q:"Which device is used to capture photographs in digital form?",o:["Printer","Digital camera","Scanner","Microphone"],a:1},
+  {q:"Plotters are mainly used in which field to print drawings?",o:["Engineering","Music","Gaming","Banking"],a:0},
+  
+  // Unit 2: Memory & Storage (Questions 31-60)
+  {q:"The smallest unit used to represent information in a computer is",o:["Bit","Byte","KB","MB"],a:0},
+  {q:"A memory location storing 8 bits of data is called",o:["1 KB","1 Byte","1 MB","1 GB"],a:1},
+  {q:"When a file size shows 1024 bytes, it is equal to",o:["1 MB","1 KB","1 GB","1 TB"],a:1},
+  {q:"A student temporarily stores program data while executing a program. Which memory is used?",o:["ROM","RAM","Hard disk","DVD"],a:1},
+  {q:"Which memory contains permanent instructions required for starting a computer?",o:["RAM","Cache","ROM","Register"],a:2},
+  {q:"When power supply is switched off, which memory loses its data?",o:["RAM","ROM","Hard disk","SSD"],a:0},
+  {q:"Which memory type keeps its data even when power is turned off?",o:["RAM","Cache","ROM","Register"],a:2},
+  {q:"A user saves large files like videos and documents for long-term use. Which device is used?",o:["RAM","Hard disk","Cache","Register"],a:1},
+  {q:"Which storage device is mainly used to permanently store operating system and user files?",o:["RAM","Hard disk","Cache","Printer"],a:1},
+  {q:"The term SSD in modern computers refers to",o:["Solid State Drive","Storage State Device","System Storage Disk","Solid Storage Device"],a:0},
+  {q:"Cache memory is designed to work very close to which component?",o:["Hard disk","CPU","Printer","Monitor"],a:1},
+  {q:"Why is cache memory used in computers?",o:["To store movies","To provide faster data access","To print files","To display graphics"],a:1},
+  {q:"Which of the following devices stores data using optical technology?",o:["CD","RAM","Cache","Register"],a:0},
+  {q:"The full form of DVD is",o:["Digital Video Disk","Dynamic Video Disk","Digital Versatile Disc","Direct Video Disk"],a:2},
+  {q:"A small portable device used to transfer files between computers is commonly called",o:["Pen drive","Hard disk","RAM disk","Cache disk"],a:0},
+  {q:"RAM and ROM together belong to which memory category?",o:["Primary memory","Secondary memory","Optical memory","Magnetic memory"],a:0},
+  {q:"Which device is an example of secondary memory used for long-term storage?",o:["RAM","Hard disk","Register","Cache"],a:1},
+  {q:"While editing a document in MS Word, the data being processed is stored temporarily in",o:["ROM","RAM","DVD","Hard disk"],a:1},
+  {q:"When a computer restarts, data stored in which memory will still remain?",o:["ROM","RAM","Cache","Register"],a:0},
+  {q:"If a computer storage capacity is 1 GB, it approximately equals",o:["1024 MB","1000 MB","512 MB","2048 MB"],a:0},
+  {q:"Which memory is used to quickly access frequently used instructions?",o:["Cache","Hard disk","DVD","USB"],a:0},
+  {q:"Which storage device stores data using magnetic technology?",o:["CD","DVD","Blu-ray","Hard disk"],a:3},
+  {q:"Optical disks read and write data using which technology?",o:["Magnet","Laser","Ink","Electric wire"],a:1},
+  {q:"A student carries assignment files using a removable storage device. Which device is most suitable?",o:["RAM","Cache","Pen drive","Register"],a:2},
+  {q:"Among the following memory types, which is the fastest?",o:["Cache","Hard disk","CD","DVD"],a:0},
+  {q:"Compared with traditional storage, SSD provides",o:["Faster data access","Slower speed","Lower storage","No storage"],a:0},
+  {q:"Which device is used to permanently store operating system files?",o:["Hard disk","RAM","Cache","Register"],a:0},
+  {q:"Computer memory stores which type of information?",o:["Only data","Only programs","Data and programs","Only output"],a:2},
+  {q:"Which memory inside the CPU provides extremely fast access during processing?",o:["Hard disk","DVD","Register","Pen drive"],a:2},
+  {q:"Which of the following is an optical disk used to store multimedia data?",o:["RAM","Cache","Register","DVD"],a:3},
+  
+  // Unit 3: Software (Questions 61-90)
+  {q:"A set of programs that instructs the computer to perform tasks is called",o:["Hardware","Software","Device","Circuit"],a:1},
+  {q:"Which of the following is an example of system software?",o:["MS Excel","Windows","Paint","Word"],a:1},
+  {q:"Which of the following is an example of application software?",o:["Excel","Linux","BIOS","Firmware"],a:0},
+  {q:"The operating system mainly acts as a",o:["Storage device","Printer controller","Interface between user and hardware","Scanner driver"],a:2},
+  {q:"Android operating system is commonly used in",o:["Printers","Mobile devices","Plotters","Scanners"],a:1},
+  {q:"Which software is mainly used to create spreadsheets?",o:["Word","Excel","Paint","Notepad"],a:1},
+  {q:"A word processor is mainly used for",o:["Typing documents","Playing games","Programming","Drawing images"],a:0},
+  {q:"Which software is used to prepare slide presentations?",o:["Excel","Word","PowerPoint","Notepad"],a:2},
+  {q:"Utility software is mainly used for",o:["Drawing pictures","Typing text","System maintenance","Playing games"],a:2},
+  {q:"Antivirus software is classified as",o:["System software","Application software","Programming software","Utility software"],a:3},
+  {q:"A compiler translates a program",o:["Line by line","Into images","Whole program at once","Into graphics"],a:2},
+  {q:"An interpreter translates a program",o:["Line by line","Entire program","Binary code","Machine code only"],a:0},
+  {q:"Which of the following is a programming language?",o:["Scanner","Mouse","Printer","C language"],a:3},
+  {q:"High-level programming languages are designed to be",o:["Human readable","Binary only","Hardware dependent","Machine readable only"],a:0},
+  {q:"Machine language instructions are written using",o:["Binary digits","English words","Symbols","Graphics"],a:0},
+  {q:"Firmware is typically stored in",o:["ROM","RAM","Hard disk","Cache"],a:0},
+  {q:"A device driver helps the operating system communicate with",o:["Network","Hardware device","Software program","Internet"],a:1},
+  {q:"Linux is an example of",o:["Application software","Device driver","Operating system","Utility program"],a:2},
+  {q:"Which of the following is an example of utility software?",o:["Excel","Word","Disk Cleanup","Paint"],a:2},
+  {q:"The operating system manages",o:["Only printing","Only typing","Hardware resources","Only drawing"],a:2},
+  {q:"If a user wants to type letters and reports, which software is used?",o:["MS Word","Excel","Paint","Media Player"],a:0},
+  {q:"A student performs calculations and data analysis using",o:["Paint","Excel","Word","Notepad"],a:1},
+  {q:"For classroom presentations using slides, which software is used?",o:["Excel","Word","PowerPoint","Paint"],a:2},
+  {q:"If a user wants to draw simple pictures on a computer, which program is suitable?",o:["Word","Excel","Paint","PowerPoint"],a:2},
+  {q:"When a computer is turned on, the operating system starts during",o:["Booting","Printing","Scanning","Saving"],a:0},
+  {q:"Software enables a computer to",o:["Break hardware","Stop operations","Perform tasks","Damage files"],a:2},
+  {q:"Programming languages are mainly used to",o:["Write programs","Print documents","Scan images","Store videos"],a:0},
+  {q:"Application software is mainly developed for",o:["Users","Hardware","Networks","Memory chips"],a:0},
+  {q:"System software primarily controls the",o:["Printer paper","Mouse cable","Computer system","Scanner cover"],a:2},
+  {q:"Which of the following is an operating system?",o:["Windows","Excel","Paint","Word"],a:0},
+  
+  // Unit 4: Data, AI & Internet (Questions 91-120)
+  {q:"Presenting data using charts, graphs or maps is known as",o:["Data Mining","Data Storage","Data Visualization","Data Entry"],a:2},
+  {q:"Processed and meaningful data is called",o:["Data","Information","Program","File"],a:1},
+  {q:"A structured collection of related data is known as",o:["File","Program","Database","Hardware"],a:2},
+  {q:"Which system organizes data into folders and files?",o:["Compiler","File System","Network","CPU"],a:1},
+  {q:"A student result report generated from marks data is an example of",o:["Data","Hardware","Information","Program"],a:2},
+  {q:"The main purpose of a database system is to",o:["Manage data efficiently","Draw images","Play games","Design circuits"],a:0},
+  {q:"Which system is more suitable for handling very large amounts of data?",o:["File System","Database System","Keyboard","Printer"],a:1},
+  {q:"Data redundancy can be minimized by using",o:["File System","DBMS","Hardware","Network"],a:1},
+  {q:"Data inconsistency is more common in",o:["Database","File System","Artificial Intelligence","Cloud Storage"],a:1},
+  {q:"The abbreviation DBMS stands for",o:["Data Backup Management System","Database Management System","Data Binary Management System","Database Memory System"],a:1},
+  {q:"Studying data to discover useful information is called",o:["Data Mining","Data Analysis","Data Entry","Data Storage"],a:1},
+  {q:"Mean, median and mode are concepts used in",o:["Networking","Programming","Descriptive Statistics","Hardware"],a:2},
+  {q:"Descriptive statistics mainly helps to",o:["Store data","Summarize data","Delete data","Encrypt data"],a:1},
+  {q:"A chart showing yearly sales performance is an example of",o:["Data Visualization","Data Deletion","Data Backup","Data Typing"],a:0},
+  {q:"Displaying data using graphs or diagrams is known as",o:["Data Entry","Data Storage","Data Visualization","Data Coding"],a:2},
+  {q:"A pie chart is commonly used in",o:["Data Visualization","Networking","Hardware design","Programming"],a:0},
+  {q:"Discovering hidden patterns from large datasets is called",o:["Data Storage","Data Mining","Data Typing","Data Entry"],a:1},
+  {q:"Data mining is mainly used for",o:["Pattern discovery","Typing text","Printing documents","Formatting data"],a:0},
+  {q:"Market basket analysis is a technique used in",o:["Database systems","Networking","Data Mining","Hardware design"],a:2},
+  {q:"A central repository that stores integrated data from multiple sources is called",o:["Data Warehouse","File System","Data Table","Spreadsheet"],a:0},
+  {q:"A data warehouse mainly supports",o:["Data Analysis","Gaming","Printing","Typing"],a:0},
+  {q:"Data warehouses are mainly used to store",o:["Historical data","Temporary data","Random data","Deleted data"],a:0},
+  {q:"The technology where computers learn patterns from data is called",o:["Networking","Machine Learning","File System","Programming"],a:1},
+  {q:"AI stands for",o:["Artificial Internet","Artificial Intelligence","Automatic Interface","Advanced Internet"],a:1},
+  {q:"Machine learning is a subfield of",o:["Hardware","Networking","Artificial Intelligence","Compiler Design"],a:2},
+  {q:"Voice assistants like Siri or Alexa are examples of",o:["Artificial Intelligence","Database System","Networking","Hardware"],a:0},
+  {q:"Chatbots commonly use which technology?",o:["Artificial Intelligence","File System","Hardware circuits","Operating System"],a:0},
+  {q:"Self-driving cars use which technology to make decisions?",o:["Networking","Hardware only","Artificial Intelligence","Compiler"],a:2},
+  {q:"Predicting future trends from previous data is an application of",o:["Machine Learning","File System","Printing","Storage"],a:0},
+  {q:"Artificial Intelligence attempts to simulate",o:["Hardware devices","Human intelligence","Printer operations","File systems"],a:1},
+  
+  // Unit 5: Advanced Internet & Security (Questions 121-150)
+  {q:"The Internet is best described as a",o:["Single computer","Network of networks","Software","Database"],a:1},
+  {q:"WWW is the abbreviation of",o:["World Wide Web","Web Wide World","Wide World Web","World Web Window"],a:0},
+  {q:"Which of the following software is used to browse websites?",o:["Windows","Linux","Chrome","Excel"],a:2},
+  {q:"If a user wants to search information on the internet, which tool is commonly used?",o:["Google","Paint","Word","Notepad"],a:0},
+  {q:"Sending messages through Gmail is an example of",o:["Communication using E-mail","Drawing","Gaming","Printing"],a:0},
+  {q:"A student sends an assignment file to Google Drive. This action is called",o:["Downloading","Uploading","Printing","Scanning"],a:1},
+  {q:"Saving a movie from the internet to your computer is called",o:["Uploading","Downloading","Scanning","Printing"],a:1},
+  {q:"Buying products from Amazon website is an example of",o:["E-learning","E-commerce","E-banking","E-mail"],a:1},
+  {q:"Attending an online class through internet is called",o:["E-learning","E-commerce","E-mail","E-banking"],a:0},
+  {q:"Transferring money using a bank mobile app is known as",o:["E-mail","E-commerce","E-banking","E-learning"],a:2},
+  {q:"A program that damages files and spreads between computers is called",o:["Hardware","Malware","Device","Network"],a:1},
+  {q:"Which software protects a computer from viruses and malware?",o:["Scanner","Printer driver","Antivirus","Media player"],a:2},
+  {q:"Internet is a",o:["Single computer","Network of networks","Software program","Database"],a:1},
+  {q:"When a fake website tries to steal passwords, it is called",o:["Cyber attack","Hardware fault","Printer problem","Memory issue"],a:0},
+  {q:"Which password is considered stronger?",o:["password","123456","abc123","T9@pL8#2"],a:3},
+  {q:"HTTPS is mainly used to provide",o:["Secure communication on websites","Internet software","Network cable","Security hardware"],a:0},
+  {q:"Sharing photos and messages with friends online is commonly done using",o:["Facebook","Windows","Excel","Word"],a:0},
+  {q:"A company conducts online meetings using",o:["Zoom","Paint","Notepad","Excel"],a:0},
+  {q:"Saving files online so they can be accessed anywhere is called",o:["Google Drive storage","Printer memory","Mouse storage","Scanner storage"],a:0},
+  {q:"Which of the following is a popular web browsing software?",o:["Linux","Chrome","MS-DOS","Paint"],a:1},
+  {q:"Illegal activities performed using computers and networks are called",o:["Cyber crime","Printer error","Hardware failure","Memory loss"],a:0},
+  {q:"Receiving large amounts of unwanted advertising emails is known as",o:["Spam","Virus","Hardware fault","Software update"],a:0},
+  {q:"Malware refers to",o:["Malicious software","Printer software","Utility software","Application software"],a:0},
+  {q:"Network security mainly protects",o:["Data and computer systems","Printer","Keyboard","Mouse"],a:0},
+  {q:"Which of the following is an example of a social networking site?",o:["Facebook","MS Word","Photoshop","Excel"],a:0},
+  {q:"Buying and selling products through the Internet is called",o:["Social networking","E-Commerce","Cloud storage","Web browsing"],a:1},
+  {q:"Which technology allows storing and accessing data over the Internet instead of a local computer?",o:["Cloud Computing","Data Mining","Word Processing","Desktop Publishing"],a:0},
+  {q:"Protecting computers and networks from attacks over the Internet is called",o:["Data entry","Cyber Security","File management","Web designing"],a:1},
+  {q:"A search engine is used to",o:["Edit documents","Search information on the Internet","Create programs","Store files"],a:1},
+  {q:"Network security mainly helps organizations to",o:["Store keyboard data","Increase screen size","Print faster","Protect information"],a:3}
+];
+
+function getUnit(idx){ return Math.floor(idx/30)+1; }
+const UNAMES = {1:'Unit 1',2:'Unit 2',3:'Unit 3',4:'Unit 4',5:'Unit 5'};
+const UFULL  = {1:'U1 — Basics',2:'U2 — Memory',3:'U3 — Software',4:'U4 — Data & AI',5:'U5 — Internet'};
+
+let questions=[], current=0, score=0, wrong=0, skipped=0, answered=false;
+let timerInt=null, autoInt=null, timeLeft=60;
+let unitStats={1:{c:0,t:0},2:{c:0,t:0},3:{c:0,t:0},4:{c:0,t:0},5:{c:0,t:0}};
+let user={name:''};
+
+function g(id){return document.getElementById(id);}
+
+function valReg(){
+  const n=g('rName').value.trim();
+  g('eName').classList.toggle('show',!n);
+  g('startBtn').disabled=!n;
+}
+
+function startQuiz(){
+  user={name:g('rName').value.trim()};
+  const sel=g('uSel').value;
+  let pool;
+  if(sel==='all') pool=[...ALL_Q];
+  else { const u=parseInt(sel); pool=ALL_Q.slice(u*30,(u+1)*30); }
+  questions=pool.sort(()=>Math.random()-.5);
+  current=0;score=0;wrong=0;skipped=0;
+  unitStats={1:{c:0,t:0},2:{c:0,t:0},3:{c:0,t:0},4:{c:0,t:0},5:{c:0,t:0}};
+  showScr('quizScreen'); loadQ();
+}
+
+function loadQ(){
+  answered=false;
+  clearInterval(autoInt);
+  const q=questions[current];
+  const origIdx=ALL_Q.indexOf(q);
+  const u=getUnit(origIdx<0?0:origIdx);
+  g('qCtr').textContent='Question '+(current+1)+' of '+questions.length;
+  g('uBadge').textContent=UNAMES[u]||'Unit 1';
+  g('pFill').style.width=((current/questions.length)*100)+'%';
+  g('qText').textContent=q.q;
+  g('hBox').classList.remove('show');
+  g('hText').textContent='';
+  g('autoNext').classList.remove('show');
+  g('nBtn').classList.remove('show');
+  const L=['A','B','C','D'], c=g('opts'); c.innerHTML='';
+  q.o.forEach((opt,i)=>{
+    const b=document.createElement('button');
+    b.className='option';
+    b.innerHTML='<span class="option-letter">'+L[i]+'</span><span class="option-text">'+opt+'</span>';
+    b.onclick=()=>pick(i);
+    c.appendChild(b);
+  });
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(timerInt); timeLeft=60; updT(60);
+  timerInt=setInterval(()=>{timeLeft--; updT(timeLeft); if(timeLeft<=0){clearInterval(timerInt);autoSkip();}},1000);
+}
+function updT(t){
+  const ci=g('tCirc'),tx=g('tNum');
+  ci.style.strokeDashoffset=201*(1-t/60);
+  tx.textContent=t;
+  const col=t>30?'var(--primary)':t>15?'var(--warning)':'var(--error)';
+  ci.style.stroke=col; tx.style.color=col;
+}
+
+function autoSkip(){
+  if(answered)return; answered=true; skipped++;
+  const q=questions[current], origIdx=ALL_Q.indexOf(q), u=getUnit(origIdx<0?0:origIdx);
+  unitStats[u].t++;
+  document.querySelectorAll('.option').forEach(b=>b.disabled=true);
+  document.querySelectorAll('.option')[q.a].classList.add('correct');
+  g('hBox').classList.add('show');
+  g('hText').innerHTML='<span class="hload">⏰ Time up! The correct answer is shown.</span>';
+  g('nBtn').classList.add('show');
+}
+
+function pick(idx){
+  if(answered)return; answered=true; clearInterval(timerInt);
+  const q=questions[current], origIdx=ALL_Q.indexOf(q), u=getUnit(origIdx<0?0:origIdx);
+  unitStats[u].t++;
+  const btns=document.querySelectorAll('.option');
+  btns.forEach(b=>b.disabled=true);
+  if(idx===q.a){
+    btns[idx].classList.add('correct');
+    score++; unitStats[u].c++;
+    g('autoNext').classList.add('show');
+    let cnt=2;
+    g('aCnt').textContent=cnt;
+    autoInt=setInterval(()=>{
+      cnt--;
+      g('aCnt').textContent=cnt;
+      if(cnt<=0){ clearInterval(autoInt); nextQ(); }
+    },1000);
+  } else {
+    btns[idx].classList.add('wrong');
+    btns[q.a].classList.add('correct');
+    wrong++;
+    g('hBox').classList.add('show');
+    g('hText').textContent='💡 '+getHint(q);
+    g('nBtn').classList.add('show');
+  }
+}
+
+function getHint(q){
+  const ans=q.o[q.a];
+  const hints={
+    'Raw data':'Unprocessed facts collected from surveys',
+    'Information':'Processed & meaningful result from data',
+    'Hardware':'Physical components you can see and touch',
+    'Software':'Set of programs/instructions for computer',
+    'Input':'Data entered into computer',
+    'Output':'Result presented to user',
+    'ALU':'Arithmetic Logic Unit - performs calculations',
+    'Control Unit':'Coordinates all CPU operations',
+    'RAM':'Temporary memory, lost when power off',
+    'ROM':'Permanent memory, keeps data after power off',
+    'Cache':'Fastest memory, very close to CPU',
+    'Hard disk':'Permanent magnetic storage',
+    'SSD':'Solid State Drive - faster than hard disk',
+    'Pen drive':'Portable USB storage device',
+    'CD/DVD':'Optical disks using laser technology',
+    'Bit':'Smallest unit (0 or 1)',
+    'Byte':'8 bits = 1 Byte',
+    'Operating System':'Interface between user and hardware',
+    'Windows/Linux/Android':'Examples of operating systems',
+    'Excel':'Spreadsheet software',
+    'Word':'Word processing software',
+    'PowerPoint':'Presentation software',
+    'Antivirus':'Protects from viruses and malware',
+    'Compiler':'Translates whole program at once',
+    'Interpreter':'Translates line by line',
+    'Machine Language':'Binary code (0s and 1s)',
+    'Database':'Structured collection of data',
+    'DBMS':'Database Management System',
+    'Data Mining':'Discovering patterns from large datasets',
+    'Data Visualization':'Charts and graphs for data',
+    'Machine Learning':'Computers learning from data',
+    'AI':'Artificial Intelligence - simulates human intelligence',
+    'Internet':'Global network of networks',
+    'WWW':'World Wide Web',
+    'Browser':'Software to browse websites (Chrome, Firefox)',
+    'Upload':'Send files to internet',
+    'Download':'Get files from internet',
+    'E-commerce':'Buying/selling online',
+    'E-learning':'Online education',
+    'Malware':'Malicious software',
+    'Cyber Crime':'Illegal computer activities',
+    'HTTPS':'Secure website communication',
+    'Cloud':'Storing data over internet',
+    'Spam':'Unwanted emails',
+    'Cyber Security':'Protecting from cyber attacks'
+  };
+  for(let key in hints){
+    if(ans.toLowerCase().includes(key.toLowerCase())||q.q.toLowerCase().includes(key.toLowerCase())){
+      return key+' → '+hints[key];
+    }
+  }
+  return ans+' → Remember this key concept';
+}
+
+function nextQ(){
+  clearInterval(autoInt);
+  current++;
+  current>=questions.length ? showResults() : loadQ();
+}
+
+function showResults(){
+  clearInterval(timerInt); clearInterval(autoInt);
+  showScr('resScreen');
+  const total=questions.length, pct=Math.round((score/total)*100), pass=pct>=50;
+  const grade=pct>=80?'A':pct>=70?'B':pct>=60?'C':pct>=50?'D':'F';
+  g('rEmoji').textContent=pct>=80?'🏆':pct>=60?'🎉':pct>=40?'😐':'💪';
+  g('rTitle').textContent=pass?'Great Job, '+user.name+'!':'Keep Practicing!';
+  g('rSub').textContent='Grade '+grade+' • '+pct+'% Score';
+  g('sNum').textContent=score; g('sDenom').textContent='/ '+total;
+  g('rC').textContent=score; g('rW').textContent=wrong; g('rSk').textContent=skipped;
+  g('rPct').textContent=pct+'%';
+  g('rPct').className='result-stat-value '+(pass?'pass':'fail');
+  const deg=Math.round(pct*3.6);
+  g('sCircle').style.background='conic-gradient(var(--primary) '+deg+'deg, var(--border) '+deg+'deg)';
+  const rows=g('uRows'); rows.innerHTML='';
+  [1,2,3,4,5].forEach(u=>{
+    const s=unitStats[u]; if(!s.t)return;
+    const p=Math.round((s.c/s.t)*100);
+    rows.innerHTML+='<div class="unit-row"><span class="unit-name">'+UFULL[u]+'</span><div class="unit-bar-wrap"><div class="unit-bar" style="width:'+p+'%"></div></div><span class="unit-percent">'+p+'%</span></div>';
+  });
+}
+
+function retryQuiz(){startQuiz();}
+function goHome(){clearInterval(timerInt);clearInterval(autoInt);showScr('regScreen');}
+function showScr(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));g(id).classList.add('active');window.scrollTo(0,0);}
+function toggleTheme(){
+  const dark=document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme',dark?'light':'dark');
+  g('themeBtn').textContent=dark?'🌙':'☀️';
+}
+</script>
+</body>
+</html>
